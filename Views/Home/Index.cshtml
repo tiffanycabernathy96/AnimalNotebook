@@ -1,0 +1,61 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+<main>
+    <section class="row">
+        <h1 id="title">Animal Notebook</h1>
+    </section>
+
+    <div class="row">
+        <section class="col-md-3">
+            <h2>Dogs</h2>
+            <script type="text/x-kendo-tmpl" id="template">
+                <div class="product">
+                    <img src="@Url.Content("~/content/web/foods/")#:ProductID#.jpg" alt="#:ProductName# image" />
+                    <h3>#:ProductName#</h3>
+                    <p>#:kendo.toString(UnitPrice, "c")#</p>
+                </div>
+            </script>
+        </section>
+        <section class="col-md-3">
+            <h2>Cats</h2>
+            <ul>
+                <li>Cat 1</li>
+            </ul>
+        </section>
+        <section class="col-md-3">
+            <h2>Reptiles</h2>
+            <ul>
+                <li>Reptile 1</li>
+            </ul>
+        </section>
+        <section class="col-md-3">
+            <h2>Rodents</h2>
+            <ul>
+
+            </ul>
+        </section>
+    </div>
+
+    <div class="row">
+        <section>
+            <p><a class="btn btn-outline-dark" href="">Add an Animal</a></p>
+        </section>
+    </div>
+
+    <div class="row">
+        <section class="col-md-6">
+            <h2>Upcoming Medicine Reminders</h2>
+            <ol>
+
+            </ol>
+        </section>
+        <section class="col-md-6">
+            <h2>Upcoming Vet Reminders</h2>
+            <ol>
+
+            </ol>
+        </section>
+    </div>
+</main>
