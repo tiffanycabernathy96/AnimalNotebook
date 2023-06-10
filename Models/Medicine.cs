@@ -10,8 +10,12 @@ namespace AnimalNotebook.Models
         [Key]
         public Guid Id { get; set; }
         public string Brand { get; set; }
+        [Display(Name = "Recurrence Amount")]
         public int RecurrenceAmount { get; set; }
+        [Display(Name = "Recurrence Type")]
         public RecurrenceType RecurrenceType { get; set; }
+        [Display(Name = "Last Date Given")]
+        [DataType(DataType.Date)]
         public DateTime LastDateGiven { get; set; }
     }
 }

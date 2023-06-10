@@ -1,4 +1,6 @@
-﻿@{
+﻿@model IEnumerable<AnimalNotebook.Models.Animal>
+
+@{
     ViewBag.Title = "Home Page";
 }
 
@@ -8,39 +10,47 @@
     </section>
 
     <div class="row">
-        <section class="col-md-3">
-            <h2>Dogs</h2>
-            <script type="text/x-kendo-tmpl" id="template">
-                <div class="product">
-                    <img src="@Url.Content("~/content/web/foods/")#:ProductID#.jpg" alt="#:ProductName# image" />
-                    <h3>#:ProductName#</h3>
-                    <p>#:kendo.toString(UnitPrice, "c")#</p>
-                </div>
-            </script>
-        </section>
-        <section class="col-md-3">
-            <h2>Cats</h2>
-            <ul>
-                <li>Cat 1</li>
-            </ul>
-        </section>
-        <section class="col-md-3">
-            <h2>Reptiles</h2>
-            <ul>
-                <li>Reptile 1</li>
-            </ul>
-        </section>
-        <section class="col-md-3">
-            <h2>Rodents</h2>
-            <ul>
+        @foreach(var animalType in Enum.GetNames(typeof(AnimalNotebook.Models.AnimalType)))
+        {
+            <section class="col-md-3">
+                <h2>@(animalType)s</h2>
+                <table class="table">
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Name)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Age)
+                        </th>
+                        <th>
 
-            </ul>
-        </section>
+                        </th>
+                    </tr>
+
+                    @foreach (var animal in Model.Where(a => a.Type.ToString() == animalType))
+                    {
+                        <tr>
+                            <td>
+                                <a href="@Url.Action("Details", "Animals", new { id = animal.Id })">@Html.DisplayFor(modelItem => animal.Name)</a>
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => animal.Age)
+                            </td>
+                            <td style="text-align:right;">
+                                <a href="@Url.Action("Edit", "Animals", new { id = animal.Id })"><i class="fa fa-pencil" style='font-size:24px'></i></a> |
+                                <a href="@Url.Action("Delete", "Animals", new { id = animal.Id })"><i class="fa fa-trash" style='font-size:24px'></i></a>
+                            </td>
+                        </tr>
+                    }
+
+                </table>
+            </section>
+        }
     </div>
 
     <div class="row">
         <section>
-            <p><a class="btn btn-outline-dark" href="">Add an Animal</a></p>
+            <p><a class="btn btn-outline-dark" href="@Url.Action("Create", "Animals")">Add an Animal</a></p>
         </section>
     </div>
 

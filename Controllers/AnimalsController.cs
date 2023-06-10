@@ -7,27 +7,36 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using AnimalNotebook.Models;
+using AnimalNotebook.Services;
 
 namespace AnimalNotebook.Controllers
 {
     public class AnimalsController : Controller
     {
-        private AnimalDBContext db = new AnimalDBContext();
+        //private AnimalDBContext db = new AnimalDBContext();
+        private IAnimalData db;
+
+        public AnimalsController(IAnimalData db)
+        {
+            this.db = db;
+        }
+
 
         // GET: Animals
         public ActionResult Index()
         {
-            return View(db.Animals.ToList());
+            var model = db.GetAnimals();
+            return View(model);
         }
 
         // GET: Animals/Details/5
-        public ActionResult Details(Guid? id)
+        public ActionResult Details(Guid id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Animal animal = db.Animals.Find(id);
+            Animal animal = db.GetAnimal(id);
             if (animal == null)
             {
                 return HttpNotFound();
@@ -46,27 +55,28 @@ namespace AnimalNotebook.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Name,Age")] Animal animal)
+        public ActionResult Create([Bind(Include = "Name,Age,Type,Breed")] Animal animal)
         {
             if (ModelState.IsValid)
             {
                 animal.Id = Guid.NewGuid();
-                db.Animals.Add(animal);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                db.AddAnimal(animal);
+                //db.Animals.Add(animal);
+                //db.SaveChanges();
+                return RedirectToAction("Index", "Home");
             }
 
             return View(animal);
         }
 
         // GET: Animals/Edit/5
-        public ActionResult Edit(Guid? id)
+        public ActionResult Edit(Guid id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Animal animal = db.Animals.Find(id);
+            Animal animal = db.GetAnimal(id);
             if (animal == null)
             {
                 return HttpNotFound();
@@ -79,25 +89,26 @@ namespace AnimalNotebook.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Name,Age")] Animal animal)
+        public ActionResult Edit([Bind(Include = "Id,Name,Age,Type,Breed")] Animal animal)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(animal).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                //db.Entry(animal).State = EntityState.Modified;
+                //db.SaveChanges();
+                db.EditAnimal(animal);
+                return RedirectToAction("Index", "Home");
             }
             return View(animal);
         }
 
         // GET: Animals/Delete/5
-        public ActionResult Delete(Guid? id)
+        public ActionResult Delete(Guid id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Animal animal = db.Animals.Find(id);
+            Animal animal = db.GetAnimal(id);
             if (animal == null)
             {
                 return HttpNotFound();
@@ -110,17 +121,26 @@ namespace AnimalNotebook.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(Guid id)
         {
-            Animal animal = db.Animals.Find(id);
-            db.Animals.Remove(animal);
-            db.SaveChanges();
-            return RedirectToAction("Index");
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Animal animal = db.GetAnimal(id);
+            if (animal == null)
+            {
+                return HttpNotFound();
+            }
+            db.deleteAnimal(animal);
+            //db.Animals.Remove(animal);
+            //db.SaveChanges();
+            return RedirectToAction("Index", "Home");
         }
 
         protected override void Dispose(bool disposing)
         {
             if (disposing)
             {
-                db.Dispose();
+                //db.Dispose();
             }
             base.Dispose(disposing);
         }

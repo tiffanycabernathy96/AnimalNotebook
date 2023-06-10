@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AnimalNotebook.Services;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -8,9 +9,16 @@ namespace AnimalNotebook.Controllers
 {
     public class HomeController : Controller
     {
+        IAnimalData db;
+
+        public HomeController(IAnimalData db)
+        {
+            this.db = db;
+        }
         public ActionResult Index()
         {
-            return View();
+            var model = db.GetAnimals();
+            return View(model);
         }
 
         public ActionResult Medicines()
