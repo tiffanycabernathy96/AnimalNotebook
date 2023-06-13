@@ -16,10 +16,24 @@ namespace AnimalNotebook
             //builder.RegisterType<InMemoryAnimalData>()
             //       .As<IAnimalData>()
             //       .SingleInstance();
+            //builder.RegisterType<InMemoryAppointmentData>()
+            //       .As<IAppointmentData>()
+            //       .SingleInstance();
+            //builder.RegisterType<InMemoryMedicineData>()
+            //       .As<IMedicineData>()
+            //       .SingleInstance();
             builder.RegisterType<SqlAnimalData>()
                    .As<IAnimalData>()
                    .InstancePerRequest();
             builder.RegisterType<AnimalDBContext>().InstancePerRequest();
+            builder.RegisterType<SqlAppointmentData>()
+                   .As<IAppointmentData>()
+                   .InstancePerRequest();
+            builder.RegisterType<AppointmentDBContext>().InstancePerRequest();
+            builder.RegisterType<SqlMedicineData>()
+                   .As<IMedicineData>()
+                   .InstancePerRequest();
+            builder.RegisterType<MedicineDBContext>().InstancePerRequest();
 
             var container = builder.Build();
             DependencyResolver.SetResolver(new AutofacDependencyResolver(container));

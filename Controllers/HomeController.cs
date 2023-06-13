@@ -1,6 +1,8 @@
-﻿using AnimalNotebook.Services;
+﻿using AnimalNotebook.Models;
+using AnimalNotebook.Services;
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -9,30 +11,41 @@ namespace AnimalNotebook.Controllers
 {
     public class HomeController : Controller
     {
-        IAnimalData db;
+        IAnimalData animalDb;
+        IAppointmentData appointmentDb;
+        IMedicineData medicineDb;
 
-        public HomeController(IAnimalData db)
+
+        public HomeController(IAnimalData animalDb, IAppointmentData appointmentDb, IMedicineData medicineDb)
         {
-            this.db = db;
+            this.animalDb = animalDb;
+            this.appointmentDb = appointmentDb;
+            this.medicineDb = medicineDb;
         }
         public ActionResult Index()
         {
-            var model = db.GetAnimals();
+            //HomeModel model = new HomeModel(animalDb, appointmentDb, medicineDb);
+            
+            HomeModel model = new HomeModel(animalDb, appointmentDb, medicineDb);
+            model.Animal = new Animal();
+            model.Appointment = new Appointment();
+            model.Medicine = new Medicine();
+            
             return View(model);
         }
 
-        public ActionResult Medicines()
-        {
-            ViewBag.Message = "Where you can Add/Edit/Delete Medicine Reminders!";
-
-            return View();
-        }
+        //public ActionResult Medicines()
+        //{
+        //    ViewBag.Message = "Where you can Add/Edit/Delete Medicine Reminders!";
+        //    var model = medicineDb.GetMedicines();
+        //    return View(model);
+        //}
 
         public ActionResult Appointments()
         {
-            ViewBag.Message = "Where you can Add/Edit/Delete Appointment Reminders!";
-
-            return View();
+            ViewBag.Message = "Thank you for checking out my Demo Project. It has been a blast working through this project setup.";
+            var model = appointmentDb.GetAppointments();
+            return View(model);
         }
     }
 }

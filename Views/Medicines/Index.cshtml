@@ -1,0 +1,57 @@
+﻿@model IEnumerable<AnimalNotebook.Models.Medicine>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Brand)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.RecurrenceAmount)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.RecurrenceType)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.LastDateGiven)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.animalId)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Brand)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.RecurrenceAmount)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.RecurrenceType)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.LastDateGiven)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.animalId)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
+            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
+        </td>
+    </tr>
+}
+
+</table>

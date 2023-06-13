@@ -21,7 +21,7 @@ namespace AnimalNotebook.Services
             db.SaveChanges();
         }
 
-        public void deleteAnimal(Animal animal)
+        public void DeleteAnimal(Animal animal)
         {
             db.Animals.Remove(animal);
             db.SaveChanges();
@@ -47,6 +47,10 @@ namespace AnimalNotebook.Services
         public IEnumerable<Animal> GetAnimals(AnimalType Breed)
         {
             return db.Animals.Where(a => a.Type == Breed);
+        }
+        public void Dispose()
+        {
+            db.Dispose();    
         }
     }
 }

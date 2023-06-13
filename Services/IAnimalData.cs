@@ -19,6 +19,8 @@ namespace AnimalNotebook.Services
 
         void EditAnimal(Animal animal);
 
-        void deleteAnimal(Animal animal);
+        void DeleteAnimal(Animal animal);
+
+        void Dispose();
     }
 }

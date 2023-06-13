@@ -1,0 +1,58 @@
+﻿@model AnimalNotebook.Models.Medicine
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Medicine</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Brand)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Brand)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.RecurrenceAmount)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RecurrenceAmount)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.RecurrenceType)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RecurrenceType)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LastDateGiven)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LastDateGiven)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.animalId)
+        </dt>
+
+        <dd>
+            @ViewBag.Name
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index", "Home")
+</p>

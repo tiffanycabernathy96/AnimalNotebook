@@ -1,4 +1,5 @@
-﻿@model IEnumerable<AnimalNotebook.Models.Animal>
+﻿@using AnimalNotebook.Models
+@model HomeModel
 
 @{
     ViewBag.Title = "Home Page";
@@ -10,24 +11,24 @@
     </section>
 
     <div class="row">
-        @foreach(var animalType in Enum.GetNames(typeof(AnimalNotebook.Models.AnimalType)))
+        @foreach (var animalType in Enum.GetNames(typeof(AnimalNotebook.Models.AnimalType)))
         {
             <section class="col-md-3">
                 <h2>@(animalType)s</h2>
                 <table class="table">
                     <tr>
                         <th>
-                            @Html.DisplayNameFor(model => model.Name)
+                            @Html.DisplayNameFor(model => model.Animal.Name)
                         </th>
                         <th>
-                            @Html.DisplayNameFor(model => model.Age)
+                            @Html.DisplayNameFor(model => model.Animal.Age)
                         </th>
                         <th>
 
                         </th>
                     </tr>
 
-                    @foreach (var animal in Model.Where(a => a.Type.ToString() == animalType))
+                    @foreach (var animal in Model.Animals.Where(a => a.Type.ToString() == animalType))
                     {
                         <tr>
                             <td>
@@ -56,16 +57,82 @@
 
     <div class="row">
         <section class="col-md-6">
-            <h2>Upcoming Medicine Reminders</h2>
-            <ol>
+            <h2>Medicine List</h2>
+            <table class="table">
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Medicine.Brand)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Medicine.animalId)
+                    </th>
+                    <th>
 
-            </ol>
+                    </th>
+                </tr>
+                @foreach (var medicine in Model.Medicines)
+                {
+                    <tr>
+                        <td>
+                            <a href="@Url.Action("Details", "Medicines", new { id = medicine.Id })">@Html.DisplayFor(modelItem => medicine.Brand)</a>
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => Model.Animals.FirstOrDefault(a => a.Id == medicine.animalId).Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => medicine.RecurrenceType)
+                        </td>
+                        <td style="text-align:right;">
+                            <a href="@Url.Action("Edit", "Medicines", new { id = medicine.Id })"><i class="fa fa-pencil" style='font-size:24px'></i></a> |
+                            <a href="@Url.Action("Delete", "Medicines", new { id = medicine.Id })"><i class="fa fa-trash" style='font-size:24px'></i></a>
+                        </td>
+                    </tr>
+                }
+            </table>
+            <div class="row">
+                <section>
+                    <p><a class="btn btn-outline-dark" href="@Url.Action("Create", "Medicines")">Add a Medicine</a></p>
+                </section>
+            </div>
         </section>
         <section class="col-md-6">
             <h2>Upcoming Vet Reminders</h2>
-            <ol>
+            <table class="table">
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Appointment.VetOffice)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Appointment.animalId)
+                    </th>
+                    <th>
 
-            </ol>
+                    </th>
+                </tr>
+                @foreach (var appointment in Model.Appointments)
+                {
+                    <tr>
+                        <td>
+                            <a href="@Url.Action("Details", "Appointments", new { id = appointment.Id })">@Html.DisplayFor(modelItem => appointment.VetOffice)</a>
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => Model.Animals.FirstOrDefault(a => a.Id == appointment.animalId).Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => appointment.Date)
+                        </td>
+                        <td style="text-align:right;">
+                            <a href="@Url.Action("Edit", "Appointments", new { id = appointment.Id })"><i class="fa fa-pencil" style='font-size:24px'></i></a> |
+                            <a href="@Url.Action("Delete", "Appointments", new { id = appointment.Id })"><i class="fa fa-trash" style='font-size:24px'></i></a>
+                        </td>
+                    </tr>
+                }
+            </table>
+            <div class="row">
+                <section>
+                    <p><a class="btn btn-outline-dark" href="@Url.Action("Create", "Appointments")")>Add an Appointment</a></p>
+                </section>
+            </div>
         </section>
     </div>
 </main>

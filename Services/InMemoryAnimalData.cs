@@ -27,7 +27,7 @@ namespace AnimalNotebook.Services
             animals.Add(animal);
         }
 
-        public void deleteAnimal(Animal animal)
+        public void DeleteAnimal(Animal animal)
         {
             animals.Remove(animal);
         }
@@ -54,6 +54,10 @@ namespace AnimalNotebook.Services
         public IEnumerable<Animal> GetAnimals(AnimalType type)
         {
             return animals.Where(a => a.Type == type);
+        }
+        public void Dispose()
+        {
+            
         }
     }
 }

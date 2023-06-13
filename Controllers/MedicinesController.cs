@@ -9,110 +9,128 @@ using System.Web.Mvc;
 using AnimalNotebook.Models;
 using AnimalNotebook.Services;
 
-namespace AnimalNotebook.Controllers
+namespace AnimalNotebook
 {
-    public class AnimalsController : Controller
+    public class MedicinesController : Controller
     {
-        private IAnimalData db;
-
-        public AnimalsController(IAnimalData db)
+        private IAnimalData animalDb;
+        private IMedicineData db;
+        public MedicinesController(IAnimalData animalDb, IMedicineData db)
         {
-            this.db = db;
+            this.animalDb = animalDb;
+            this.db = db;  
         }
 
-
-        // GET: Animals
+        // GET: Medicines
         public ActionResult Index()
         {
-            return View(db.GetAnimals());
+            return View(db.GetMedicines());
         }
 
-        // GET: Animals/Details/5
+        // GET: Medicines/Details/5
         public ActionResult Details(Guid id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Animal animal = db.GetAnimal(id);
-            if (animal == null)
+            Medicine medicine = db.GetMedicine(id);
+            if (medicine == null)
             {
                 return HttpNotFound();
             }
-            return View(animal);
+            string name = animalDb.GetAnimal(medicine.animalId).Name;
+            ViewBag.name = name;
+            return View(medicine);
         }
 
-        // GET: Animals/Create
+        // GET: Medicines/Create
         public ActionResult Create()
         {
+            IEnumerable<Animal> animals = animalDb.GetAnimals().ToList();
+            List<SelectListItem> selectList = animals.Select(x => new SelectListItem
+            {
+                Value = x.Id.ToString(),
+                Text = x.Name
+            }).ToList();
+
+            ViewBag.Animals = selectList;
             return View();
         }
 
-        // POST: Animals/Create
+        // POST: Medicines/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Name,Age,Type,Breed")] Animal animal)
+        public ActionResult Create([Bind(Include = "Brand,RecurrenceAmount,RecurrenceType,LastDateGiven,animalId")] Medicine medicine)
         {
             if (ModelState.IsValid)
             {
-                animal.Id = Guid.NewGuid();
-                db.AddAnimal(animal);
+                medicine.Id = Guid.NewGuid();
+                db.AddMedicine(medicine);
                 return RedirectToAction("Index", "Home");
             }
 
-            return View(animal);
+            return View(medicine);
         }
 
-        // GET: Animals/Edit/5
+        // GET: Medicines/Edit/5
         public ActionResult Edit(Guid id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Animal animal = db.GetAnimal(id);
-            if (animal == null)
+            Medicine medicine = db.GetMedicine(id);
+            if (medicine == null)
             {
                 return HttpNotFound();
             }
-            return View(animal);
+            IEnumerable<Animal> animals = animalDb.GetAnimals().ToList();
+            List<SelectListItem> selectList = animals.Select(x => new SelectListItem
+            {
+                Value = x.Id.ToString(),
+                Text = x.Name
+            }).ToList();
+            
+            ViewBag.Animals = selectList;
+            return View(medicine);
         }
 
-        // POST: Animals/Edit/5
+        // POST: Medicines/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Name,Age,Type,Breed")] Animal animal)
+        public ActionResult Edit([Bind(Include = "Id,Brand,RecurrenceAmount,RecurrenceType,LastDateGiven,animalId")] Medicine medicine)
         {
             if (ModelState.IsValid)
             {
-                //db.Entry(animal).State = EntityState.Modified;
-                //db.SaveChanges();
-                db.EditAnimal(animal);
+                db.EditMedicine(medicine); 
                 return RedirectToAction("Index", "Home");
             }
-            return View(animal);
+            return View(medicine);
         }
 
-        // GET: Animals/Delete/5
+        // GET: Medicines/Delete/5
         public ActionResult Delete(Guid id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Animal animal = db.GetAnimal(id);
-            if (animal == null)
+            Medicine medicine = db.GetMedicine(id);
+            if (medicine == null)
             {
                 return HttpNotFound();
             }
-            return View(animal);
+            string name = animalDb.GetAnimal(medicine.animalId).Name;
+            ViewBag.name = name;
+            return View(medicine);
         }
 
-        // POST: Animals/Delete/5
+        // POST: Medicines/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(Guid id)
@@ -121,12 +139,12 @@ namespace AnimalNotebook.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Animal animal = db.GetAnimal(id);
-            if (animal == null)
+            Medicine medicine = db.GetMedicine(id);
+            if (medicine == null)
             {
                 return HttpNotFound();
             }
-            db.DeleteAnimal(animal);
+            db.DeleteMedicine(medicine);
             return RedirectToAction("Index", "Home");
         }
 

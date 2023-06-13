@@ -9,110 +9,129 @@ using System.Web.Mvc;
 using AnimalNotebook.Models;
 using AnimalNotebook.Services;
 
-namespace AnimalNotebook.Controllers
+namespace AnimalNotebook
 {
-    public class AnimalsController : Controller
+    public class AppointmentsController : Controller
     {
-        private IAnimalData db;
+        private IAnimalData animalDb;
+        private IAppointmentData db;
 
-        public AnimalsController(IAnimalData db)
+        public AppointmentsController(IAnimalData animalDb, IAppointmentData db)
         {
+            this.animalDb = animalDb;
             this.db = db;
         }
 
-
-        // GET: Animals
+        // GET: Appointments
         public ActionResult Index()
-        {
-            return View(db.GetAnimals());
+        {    
+            return View(db.GetAppointments());
         }
 
-        // GET: Animals/Details/5
+        // GET: Appointments/Details/5
         public ActionResult Details(Guid id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Animal animal = db.GetAnimal(id);
-            if (animal == null)
+            Appointment appointment = db.GetAppointment(id);
+            if (appointment == null)
             {
                 return HttpNotFound();
             }
-            return View(animal);
+            string name = animalDb.GetAnimal(appointment.animalId).Name;
+            ViewBag.name = name;
+            return View(appointment);
         }
 
-        // GET: Animals/Create
+        // GET: Appointments/Create
         public ActionResult Create()
         {
+            IEnumerable<Animal> animals = animalDb.GetAnimals().ToList();
+            List<SelectListItem> selectList = animals.Select(x => new SelectListItem
+            {
+                Value = x.Id.ToString(),
+                Text = x.Name
+            }).ToList();
+
+            ViewBag.Animals = selectList;
             return View();
         }
 
-        // POST: Animals/Create
+        // POST: Appointments/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Name,Age,Type,Breed")] Animal animal)
+        public ActionResult Create([Bind(Include = "VetOffice,VetOfficeAddress,Date,animalId")] Appointment appointment)
         {
             if (ModelState.IsValid)
             {
-                animal.Id = Guid.NewGuid();
-                db.AddAnimal(animal);
+                appointment.Id = Guid.NewGuid();
+                db.AddAppointment(appointment);
                 return RedirectToAction("Index", "Home");
             }
 
-            return View(animal);
+            return View(appointment);
         }
 
-        // GET: Animals/Edit/5
+        // GET: Appointments/Edit/5
         public ActionResult Edit(Guid id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Animal animal = db.GetAnimal(id);
-            if (animal == null)
+            Appointment appointment = db.GetAppointment(id);
+            if (appointment == null)
             {
                 return HttpNotFound();
             }
-            return View(animal);
+            IEnumerable<Animal> animals = animalDb.GetAnimals().ToList();
+            List<SelectListItem> selectList = animals.Select(x => new SelectListItem
+            {
+                Value = x.Id.ToString(),
+                Text = x.Name
+            }).ToList();
+
+            ViewBag.Animals = selectList;
+            return View(appointment);
         }
 
-        // POST: Animals/Edit/5
+        // POST: Appointments/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Name,Age,Type,Breed")] Animal animal)
+        public ActionResult Edit([Bind(Include = "Id,VetOffice,VetOfficeAddress,Date,animalId")] Appointment appointment)
         {
             if (ModelState.IsValid)
             {
-                //db.Entry(animal).State = EntityState.Modified;
-                //db.SaveChanges();
-                db.EditAnimal(animal);
+                db.EditAppointment(appointment);
                 return RedirectToAction("Index", "Home");
             }
-            return View(animal);
+            return View(appointment);
         }
 
-        // GET: Animals/Delete/5
+        // GET: Appointments/Delete/5
         public ActionResult Delete(Guid id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Animal animal = db.GetAnimal(id);
-            if (animal == null)
+            Appointment appointment = db.GetAppointment(id);
+            if (appointment == null)
             {
                 return HttpNotFound();
             }
-            return View(animal);
+            string name = animalDb.GetAnimal(appointment.animalId).Name;
+            ViewBag.name = name;
+            return View(appointment);
         }
 
-        // POST: Animals/Delete/5
+        // POST: Appointments/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(Guid id)
@@ -121,12 +140,12 @@ namespace AnimalNotebook.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Animal animal = db.GetAnimal(id);
-            if (animal == null)
+            Appointment appointment = db.GetAppointment(id);
+            if (appointment == null)
             {
                 return HttpNotFound();
             }
-            db.DeleteAnimal(animal);
+            db.DeleteAppointment(appointment);
             return RedirectToAction("Index", "Home");
         }
 
